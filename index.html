@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SELARAS – Prototype</title>
+<style>
+:root{--bg:#F4F7FB;--pri:#20334D;--acc:#286DA8;--mut:#7A8799;--line:#E3EAF3;--soft:#E8F1FA;--red:#C0443C;color-scheme:light}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:Inter,"Segoe UI",system-ui,-apple-system,sans-serif;background:#DDE5EF;color:var(--pri);display:flex;align-items:center;justify-content:center}
+button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer;border:0;background:none}
+.phone{position:relative;width:390px;height:844px;max-width:100%;max-height:100%;background:var(--bg);border-radius:32px;overflow:hidden;box-shadow:0 20px 60px rgba(32,51,77,.25);display:flex;flex-direction:column}
+@media(max-width:430px){.phone{border-radius:0;width:100%;height:100%}}
+#screen{flex:1;overflow-y:auto;padding:calc(20px + env(safe-area-inset-top,0px)) 18px 24px}#screen::-webkit-scrollbar{display:none}
+nav{display:none;background:#fff;border-top:1px solid var(--line);padding:8px 8px calc(10px + env(safe-area-inset-bottom,0px))}
+nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:600;color:var(--mut)}
+nav svg,.ic{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}nav button.on{color:var(--acc)}
+.row{display:flex;align-items:center;gap:10px}.sb{justify-content:space-between}
+.logo{font-size:24px;font-weight:800;letter-spacing:.5px}
+.round{width:38px;height:38px;border-radius:50%;background:#fff;display:grid;place-items:center;border:1px solid var(--line);flex:none;position:relative}
+.round i{position:absolute;top:8px;right:9px;width:8px;height:8px;border-radius:50%;background:var(--acc);border:2px solid #fff}
+h1{font-size:21px;font-weight:800;margin-top:16px}h2{font-size:17px;font-weight:800}.sub{color:var(--mut);font-size:13px;margin-top:3px}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;margin-top:12px}
+.lab{font-size:11px;color:var(--mut);font-weight:600}
+.fld{background:#fff;border:1px solid var(--line);border-radius:14px;padding:11px 14px;margin-top:10px}
+.fld input,.fld select,.fld textarea{width:100%;border:0;outline:0;background:none;font-size:15px;font-weight:600;margin-top:4px;resize:none}
+.fld input::placeholder,.fld textarea::placeholder{color:#AAB5C4;font-weight:500}
+.fld:focus-within{border-color:var(--acc)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{width:100%;background:var(--acc);color:#fff;border-radius:12px;padding:14px;font-weight:700;font-size:14px;margin-top:14px}
+.btn.sm{width:auto;padding:8px 12px;font-size:12px;margin:0;border-radius:10px}.btn.red{background:var(--red)}.btn.sec{background:var(--soft);color:var(--acc)}
+.ghost{display:block;margin:14px auto 0;font-size:12px;font-weight:600;color:var(--mut)}
+.hd{display:grid;grid-template-columns:38px 1fr 50px;align-items:center;margin-bottom:6px}.hd b{text-align:center;font-size:16px}.hd button:last-child{font-size:12px;color:var(--mut);text-align:right}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-top:10px}
+.wd{padding:7px 0;border-radius:12px;text-align:center;font-size:11px;color:var(--mut);position:relative}.wd b{display:block;font-size:15px;color:var(--pri);margin-top:3px}
+.wd.on{background:var(--acc);color:#CFE2F3}.wd.on b{color:#fff}.wd u{display:block;width:4px;height:4px;border-radius:50%;background:var(--acc);margin:3px auto 0}.wd.on u{background:#fff}.wd:not(.has) u{visibility:hidden}
+.st{display:flex;justify-content:space-between;align-items:center;margin-top:20px}.st h2{font-size:16px}.st small{font-size:12px;color:var(--mut);font-weight:500}.lnk{color:var(--acc);font-size:12px;font-weight:700}
+.evt{display:flex;gap:12px;align-items:center;cursor:pointer}
+.tm{border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:6px 8px;font-size:11px;font-weight:700;text-align:center;line-height:1.4;flex:none}
+.tt{font-weight:700;font-size:14px;line-height:1.3}.meta{font-size:12px;color:var(--mut);margin-top:2px}
+.tag{max-width:120px;overflow:hidden;text-overflow:ellipsis;font-size:10px;font-weight:700;padding:3px 8px;border-radius:7px;background:var(--soft);color:var(--acc);white-space:nowrap}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);background:#fff;border:1px solid var(--line);border-radius:12px;padding:3px;margin-top:14px}
+.tabs button{padding:8px 0;border-radius:9px;font-size:12px;font-weight:600;color:var(--mut)}.tabs .on{background:var(--acc);color:#fff}
+.dl{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);margin-top:10px;padding-top:10px;font-size:12px}
+.ck{width:30px;height:30px;border-radius:10px;background:var(--soft);color:var(--acc);display:grid;place-items:center;flex:none}.ck.on{background:var(--acc);color:#fff}
+.done .tt{text-decoration:line-through;color:var(--mut)}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.seg button{padding:9px;border-radius:9px;background:var(--bg);font-size:12px;font-weight:600;color:var(--mut)}.seg .on{background:var(--acc);color:#fff}
+.empty{text-align:center;padding:26px 10px 14px}.empty b{font-size:14px;display:block}.empty p{font-size:12px;color:var(--mut);margin:6px 0 12px;line-height:1.5}
+.av{width:54px;height:54px;border-radius:50%;background:var(--soft);color:var(--acc);display:grid;place-items:center;font-weight:800;font-size:18px;border:1px solid var(--line);flex:none}
+.set{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);cursor:pointer}.set:last-child{border:0}
+.sw{width:42px;height:25px;border-radius:99px;background:#C9D4E2;position:relative;flex:none;margin-left:auto}.sw::after{content:"";position:absolute;top:3px;left:3px;width:19px;height:19px;border-radius:50%;background:#fff;transition:.2s}.sw.on{background:var(--acc)}.sw.on::after{left:20px}
+.err{color:var(--red);font-size:12px;margin-top:10px;min-height:16px;text-align:center}
+.ob h1{font-size:30px;line-height:1.2;margin-top:34px}.ob .card{display:flex;gap:12px;align-items:center;margin-top:12px;padding:16px}
+.ico{width:34px;height:34px;border-radius:10px;background:var(--soft);color:var(--acc);display:grid;place-items:center;flex:none}
+#ov{position:absolute;inset:0;background:rgba(32,51,77,.45);display:none;align-items:flex-end;z-index:5}#ov.show{display:flex}
+.sheet{background:#fff;width:100%;border-radius:24px 24px 0 0;padding:20px 20px calc(24px + env(safe-area-inset-bottom,0px));animation:up .2s ease-out}
+@keyframes up{from{transform:translateY(30px);opacity:0}}@media(prefers-reduced-motion:reduce){.sheet{animation:none}}
+.chips{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}.chips button{padding:9px 16px;border-radius:99px;background:var(--soft);color:var(--acc);font-weight:700;font-size:13px}.chips .on{background:var(--acc);color:#fff}
+#toast{position:absolute;left:50%;bottom:90px;transform:translateX(-50%);background:var(--pri);color:#fff;padding:10px 16px;border-radius:12px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:9;max-width:90%;text-align:center}#toast.show{opacity:1}
+button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="phone"><div id="screen"></div><nav id="nav"></nav><div id="ov"></div><div id="toast"></div></div>
+<script>
+const TODAY="2026-11-19",$=i=>document.getElementById(i);
+const DS=["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"],MS=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+const fresh=()=>({ob:false,tab:"home",sel:TODAY,tf:"Mendatang",view:null,nid:1,
+ prof:{nama:"",nim:"",prodi:"",sem:"",fak:""},set:{rem:true,remH:3,rest:true,gap:30},tasks:[],sched:[]});
+let S=fresh();try{const x=localStorage.getItem("selaras");if(x)S=JSON.parse(x)}catch(e){}
+const save=()=>{try{localStorage.setItem("selaras",JSON.stringify(S))}catch(e){}};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const D=i=>new Date(i+"T12:00:00Z"),iso=d=>d.toISOString().slice(0,10),add=(i,n)=>{const d=D(i);d.setUTCDate(d.getUTCDate()+n);return iso(d)};
+const fmt=(i,s)=>{const d=D(i);return DS[d.getUTCDay()]+", "+d.getUTCDate()+" "+(s?MS[d.getUTCMonth()].slice(0,3):MS[d.getUTCMonth()])+" "+d.getUTCFullYear()};
+const mon=i=>add(i,-((D(i).getUTCDay()+6)%7)),mins=t=>+t.slice(0,2)*60+ +t.slice(3);
+const ini=()=>S.prof.nama.trim()?S.prof.nama.trim().split(/\s+/).map(w=>w[0]).slice(0,2).join("").toUpperCase():"M";
+const I={home:'<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',jadwal:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/>',tugas:'<rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 9h8M8 13h8M8 17h5"/>',profil:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',bell:'<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 21h4"/>',back:'<path d="M15 5l-7 7 7 7"/>',edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/>',chk:'<path d="M5 12l5 5 9-10"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',trash:'<path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/>',x:'<path d="M6 6l12 12M18 6L6 18"/>'};
+const ic=k=>`<svg class="ic" viewBox="0 0 24 24" style="width:18px;height:18px">${I[k]}</svg>`;
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("show"),2200)}
+function sheet(h){$("ov").innerHTML='<div class="sheet">'+h+'</div>';$("ov").classList.add("show")}
+function closeSheet(){$("ov").classList.remove("show");$("ov").innerHTML=""}
+$("ov").addEventListener("click",e=>{if(e.target.id==="ov")closeSheet()});
+function go(t){S.tab=t;S.view=null;render();$("screen").scrollTop=0}
+function openV(t,id){S.view={t,id:id||0};render();$("screen").scrollTop=0}
+function back(){S.view=null;render()}
+const bell=()=>`<button class="round" onclick="openV('notif')" aria-label="Notifikasi">${ic("bell")}${notifs().length?"<i></i>":""}</button>`;
+const hdr=()=>`<div class="row sb"><div class="logo">SELARAS</div>${bell()}</div>`;
+function notifs(){if(!S.set.rem)return[];return S.tasks.filter(t=>!t.done&&t.d>=TODAY&&t.d<=add(TODAY,S.set.remH)).sort((a,b)=>a.d.localeCompare(b.d))}
+const upc=()=>S.tasks.filter(t=>!t.done).sort((a,b)=>(a.d+a.w).localeCompare(b.d+b.w));
+const dayEv=d=>S.sched.filter(s=>s.d===d).sort((a,b)=>mins(a.a)-mins(b.a));
+
+function week(){const m=mon(S.sel),mo=D(S.sel);let h=`<div class="row sb" style="margin-top:16px"><span class="lab" style="font-size:12px">${MS[mo.getUTCMonth()].toUpperCase()} ${mo.getUTCFullYear()}</span><span class="row"><button class="lnk" onclick="S.sel=add(S.sel,-7);render()" aria-label="Minggu sebelumnya">‹</button><button class="lnk" onclick="S.sel='${TODAY}';render()">Hari ini</button><button class="lnk" onclick="S.sel=add(S.sel,7);render()" aria-label="Minggu berikutnya">›</button></span></div><div class="card" style="margin-top:8px;padding:8px"><div class="week">`;
+ for(let i=0;i<7;i++){const d=add(m,i),has=dayEv(d).length||S.tasks.some(t=>!t.done&&t.d===d);h+=`<button class="wd ${d===S.sel?"on":""} ${has?"has":""}" onclick="S.sel='${d}';render()">${["Sen","Sel","Rab","Kam","Jum","Sab","Min"][i]}<b>${+d.slice(8)}</b><u></u></button>`}
+ return h+"</div></div>"}
+function tcard(t){const late=t.d<TODAY&&!t.done;return `<div class="card ${t.done?"done":""}" style="margin-top:10px"><div class="row sb" style="align-items:flex-start"><div style="cursor:pointer;flex:1" onclick="openV('task',${t.id})"><div class="meta" style="margin:0">${esc(t.mk)} • <span class="tag">${t.tipe}</span></div><div class="tt" style="font-size:15px;margin-top:6px">${esc(t.j)}</div></div>
+ <div class="row" style="gap:6px;flex:none"><button class="ck" onclick="openV('task',${t.id})" aria-label="Ubah tugas">${ic("edit")}</button><button class="ck" style="color:var(--red);background:#FBEAE8" onclick="del('task',${t.id})" aria-label="Hapus tugas">${ic("trash")}</button>${t.done?`<button class="ck" style="background:var(--line);color:var(--pri)" onclick="undo(${t.id})" aria-label="Batalkan selesai">${ic("x")}</button>`:`<button class="ck" onclick="toggle(${t.id})" aria-label="Tandai selesai">${ic("chk")}</button>`}</div></div>
+ <div class="dl"><span class="row" style="gap:6px">${ic("clock")}<span>Deadline: <b style="color:${late?"var(--red)":"inherit"}">${fmt(t.d,1)}</b></span></span><span class="tag">${t.w} WIB</span></div></div>`}
+function scard(s){return `<div class="card evt" onclick="openV('sched',${s.id})"><div class="tm">${s.a}<br>${s.b}</div><div style="flex:1"><div class="tt">${esc(s.j)}</div><div class="meta">${esc(s.l||"Lokasi belum diisi")}</div></div><span class="tag">${s.kat}</span></div>`}
+const emptyT=(h,p,b,f)=>`<div class="card empty"><b>${h}</b><p>${p}</p><button class="btn sm" onclick="${f}">${b}</button></div>`;
+
+function vOb(){return `<div class="ob" style="display:flex;flex-direction:column;min-height:100%"><div class="logo" style="letter-spacing:3px;margin-top:20px;font-size:18px">SELARAS</div>
+ <h1>Aktivitas tertata,<br>kuliah lebih selaras.</h1><div class="sub" style="line-height:1.5">Atur tugas, jadwal, dan waktu istirahat agar harimu lebih seimbang.</div>
+ <div style="margin-top:22px">${[["tugas","Kelola tugas kuliah","Catat tugas dan pantau deadline."],["jadwal","Susun jadwal harian","Lihat kegiatan dan waktu kosongmu."],["clock","Jaga waktu istirahat","Beri jeda di sela aktivitas kuliah."]].map(a=>`<div class="card"><div class="ico">${ic(a[0])}</div><div><div class="tt">${a[1]}</div><div class="meta">${a[2]}</div></div></div>`).join("")}</div>
+ <div style="flex:1;min-height:30px"></div><button class="btn" onclick="S.ob=true;render()">Mulai</button><div class="sub" style="text-align:center;margin:12px 0 4px;font-size:12px">Tanpa akun. Langsung gunakan.</div></div>`}
+
+function vHome(){const ev=dayEv(S.sel),u=upc().slice(0,2),isT=S.sel===TODAY;
+ return hdr()+`<h1 style="margin-top:14px">Halo, ${esc(S.prof.nama.trim().split(" ")[0]||"Mahasiswa")}!</h1><div class="sub">Selamat datang di Selaras.</div>`+week()+
+ `<div class="st"><h2>Tugas Terdekat</h2><button class="lnk" onclick="go('tugas')">Lihat semua ›</button></div>`+
+ (u.length?u.map(tcard).join(""):emptyT("Belum ada tugas","Catat tugas kuliahmu agar deadline tidak terlewat.","+ Tambah Tugas","openV('task')"))+
+ `<div class="st"><h2>${isT?"Kegiatan Hari Ini":"Kegiatan "+fmt(S.sel,1).split(",")[0]}</h2><button class="btn sm" onclick="openV('sched')">+ Tambah</button></div>`+
+ (ev.length?ev.map(scard).join(""):emptyT("Belum ada kegiatan","Susun jadwal kuliah dan waktu istirahat di tanggal ini.","+ Tambah Jadwal","openV('sched')"))}
+
+function vJadwal(){const ev=dayEv(S.sel);return hdr()+`<h1 style="margin-top:14px">Jadwal Kegiatan</h1><div class="sub">Atur agenda kuliah dan waktu istirahat harianmu.</div>`+week()+
+ `<div class="st"><h2>Agenda ${S.sel===TODAY?"Hari Ini":fmt(S.sel,1).split(",")[0]} <small>(${ev.length} sesi)</small></h2><button class="btn sm" onclick="openV('sched')">+ Tambah</button></div>`+
+ (ev.length?ev.map(scard).join(""):emptyT("Agenda masih kosong","Belum ada kegiatan di "+fmt(S.sel)+".","+ Tambah Jadwal","openV('sched')"))}
+
+function vTugas(){const wk=mon(S.sel===TODAY?TODAY:TODAY),we=add(wk,6),all=S.tasks;
+ const L={Mendatang:upc(),"Minggu Ini":upc().filter(t=>t.d>=wk&&t.d<=we),Selesai:all.filter(t=>t.done)},l=L[S.tf];
+ return hdr()+`<h1 style="margin-top:14px">Daftar Tugas</h1><div class="sub">Pantau tenggat waktu dan kelola tugas kuliahmu.</div>
+ <div class="tabs">${Object.keys(L).map(k=>`<button class="${S.tf===k?"on":""}" onclick="S.tf='${k}';render()">${k}${k!=="Minggu Ini"?" ("+L[k].length+")":""}</button>`).join("")}</div>
+ <div class="st"><h2>${S.tf==="Selesai"?"Tugas Selesai":"Tenggat Terdekat"} <small>(${l.length} tugas)</small></h2><button class="btn sm" onclick="openV('task')">+ Tambah</button></div>`+
+ (S.tf==="Selesai"&&l.length?`<button class="btn sec" style="margin-top:0" onclick="clearDone()">Hapus semua tugas selesai</button>`:"")+(l.length?l.map(tcard).join(""):emptyT(S.tf==="Selesai"?"Belum ada tugas selesai":"Belum ada tugas","Ketuk Tambah untuk mencatat tugas pertamamu.","+ Tambah Tugas","openV('task')"))}
+
+function vProfil(){const p=S.prof,s=S.set;return hdr()+`<h1 style="margin-top:14px">Profil Mahasiswa</h1><div class="sub">Informasi akademik dan pengaturan preferensi jadwal.</div>
+ <div class="card"><div class="row"><div class="av">${ini()}</div><div><div class="tt" style="font-size:15px">${esc(p.nama||"Mahasiswa")}</div><div class="meta">NIM: ${esc(p.nim||"belum diisi")}</div>${p.prodi||p.sem?`<span class="tag" style="display:inline-block;margin-top:6px">${esc(p.prodi||"Prodi")} • Sem. ${esc(p.sem||"-")}</span>`:""}</div></div>
+ <div class="dl"><span class="lab">Data Akun Mahasiswa</span><button class="btn sm sec" onclick="openV('prof')">Edit Profil</button></div></div>
+ <div class="st"><span class="lab">INFORMASI AKADEMIK</span></div><div class="card" style="margin-top:8px"><div class="lab">Fakultas &amp; Kampus</div><div class="tt" style="margin-top:3px;color:${p.fak?"inherit":"var(--mut)"}">${esc(p.fak||"Belum diisi")}</div></div>
+ <div class="st"><span class="lab">PREFERENSI WAKTU &amp; ISTIRAHAT</span></div><div class="card" style="padding:2px 14px">
+ <div class="set" onclick="rem()"><div><div class="tt">Pengingat Deadline Tugas</div><div class="meta">${s.rem?"H-"+s.remH+" hari sebelum deadline":"Nonaktif"}</div></div><button class="sw ${s.rem?"on":""}" onclick="event.stopPropagation();S.set.rem=!S.set.rem;render()" aria-label="Pengingat"></button></div>
+ <div class="set" onclick="rest()"><div><div class="tt">Jeda Waktu Istirahat</div><div class="meta">${s.rest?"Minimal "+s.gap+" menit antar kuliah":"Nonaktif"}</div></div><button class="sw ${s.rest?"on":""}" onclick="event.stopPropagation();S.set.rest=!S.set.rest;render()" aria-label="Jeda istirahat"></button></div></div>
+ <div class="card"><div class="row" style="gap:8px;font-weight:700;font-size:14px">${ic("bell").replace("18px","16px")}Tentang SELARAS</div><div class="meta" style="margin-top:8px;line-height:1.5">Sistem Manajemen Jadwal dan Kapasitas Energi Mahasiswa v1.0. Dirancang membantu ritme aktivitas kuliah dan istirahat agar seimbang dan teratur.</div></div>
+ <button class="btn sec" onclick="demo()">Isi dengan data contoh</button>
+ <button class="ghost" onclick="resetApp()">Atur ulang aplikasi (tampilan pertama kali)</button>`}
+
+function rem(){sheet(`<h2>Pengingat deadline</h2><div class="sub">Ingatkan sebelum tenggat tugas.</div><div class="chips">${[1,3,7].map(n=>`<button class="${S.set.remH===n?"on":""}" onclick="S.set.remH=${n};S.set.rem=true;closeSheet();toast('Pengingat H-${n} disimpan');render()">H-${n} hari</button>`).join("")}</div>`)}
+function rest(){sheet(`<h2>Jeda waktu istirahat</h2><div class="sub">Jeda minimal antar kuliah.</div><div class="chips">${[15,30,45,60].map(n=>`<button class="${S.set.gap===n?"on":""}" onclick="S.set.gap=${n};S.set.rest=true;closeSheet();toast('Jeda minimal ${n} menit disimpan');render()">${n} menit</button>`).join("")}</div>`)}
+function demo(){S.prof={nama:"Vicky Andika",nim:"2407044",prodi:"Sistem Informasi",sem:"5",fak:"Fakultas Ilmu Komputer ITG"};
+ S.tasks=[["Pemrograman Web Lanjut","Implementasi REST API & Autentikasi JWT","Kelompok","2026-11-19","23:59"],["Sistem Basis Data","Laporan Normalisasi Skema & Relasi Tabel","Individu","2026-11-21","18:00"],["Jaringan Komputer","Simulasi Konfigurasi Subnetting Cisco Packet Tracer","Individu","2026-11-23","21:00"]].map((a,i)=>({id:100+i,mk:a[0],j:a[1],tipe:a[2],d:a[3],w:a[4],note:"",done:false}));
+ S.sched=[["Kuliah Teori","Kuliah Sistem Basis Data","2026-11-19","08:00","09:40","Ruang Teori 302 • Gedung Fasilkom"],["Istirahat","Waktu Istirahat & Makan Siang","2026-11-19","11:30","13:00","Kantin Kampus"],["Praktikum","Praktikum Jaringan Komputer","2026-11-19","13:30","15:10","Laboratorium Jaringan 2"],["Kuliah Teori","Kecerdasan Buatan (AI)","2026-11-20","10:00","11:40","Ruang 204 • Gedung B Fasilkom"]].map((a,i)=>({id:200+i,kat:a[0],j:a[1],d:a[2],a:a[3],b:a[4],l:a[5],note:""}));
+ S.nid=300;toast("Data contoh dimuat");render()}
+function resetApp(){sheet(`<h2>Atur ulang aplikasi?</h2><div class="sub" style="margin:6px 0 16px">Semua data dihapus dan aplikasi kembali seperti pertama kali dibuka.</div><div class="two"><button class="btn sec" style="margin:0" onclick="closeSheet()">Batal</button><button class="btn red" style="margin:0" onclick="closeSheet();S=fresh();render()">Atur Ulang</button></div>`)}
+
+function head(t){return `<div class="hd"><button class="round" onclick="back()" aria-label="Kembali">${ic("back")}</button><b>${t}</b><button onclick="back()">Batal</button></div>`}
+const f=(l,i,v,p,ty)=>`<div class="fld"><div class="lab">${l}</div><input id="${i}" type="${ty||"text"}" value="${esc(v||"")}" placeholder="${p||""}"></div>`;
+const sel=(l,i,a,v)=>`<div class="fld"><div class="lab">${l}</div><select id="${i}">${a.map(x=>`<option ${x===v?"selected":""}>${x}</option>`).join("")}</select></div>`;
+const segm=(l,id,a,v)=>`<div class="fld"><div class="lab">${l}</div><div class="seg" id="${id}">${a.map(x=>`<button class="${x===v?"on":""}" data-v="${x}" onclick="this.parentNode.querySelectorAll('button').forEach(b=>b.classList.remove('on'));this.classList.add('on')">${x}</button>`).join("")}</div></div>`;
+const gv=id=>$(id).value.trim(),gs=id=>$(id).querySelector(".on").dataset.v;
+
+function vForm(){const{t,id}=S.view;
+ if(t==="notif"){const n=notifs();return head("Notifikasi")+(n.length?n.map(x=>`<div class="card evt" onclick="openV('task',${x.id})"><div class="ico">${ic("bell")}</div><div><div class="tt">${esc(x.j)}</div><div class="meta">Deadline ${fmt(x.d,1)} pukul ${x.w} WIB</div></div></div>`).join(""):`<div class="card empty"><b>Belum ada pemberitahuan</b><p>${S.set.rem?"Pengingat akan muncul saat ada tugas yang mendekati deadline.":"Pengingat deadline sedang nonaktif. Aktifkan di Profil."}</p></div>`)}
+ if(t==="task"){const x=S.tasks.find(y=>y.id===id)||{mk:"",j:"",tipe:"Individu",d:"",w:"23:59",note:"",done:false};
+  return head(id?"Edit Tugas":"Tambah Tugas")+f("Mata Kuliah","f1",x.mk,"Misal: Pemrograman Web Lanjut")+f("Nama Tugas","f2",x.j,"Misal: Implementasi REST API &amp; JWT")+segm("Tipe Tugas","f3",["Individu","Kelompok"],x.tipe)+f("Tanggal Deadline","f4",x.d,"","date")+f("Waktu Deadline","f5",x.w,"","time")+
+  `<div class="fld"><div class="lab">Instruksi / Catatan Pengumpulan</div><textarea id="f6" rows="2" placeholder="Misal: Format PDF, submit di portal e-learning kampus">${esc(x.note||"")}</textarea></div>`+(id?segm("Status Pengerjaan","f7",["Belum Selesai","Tandai Selesai"],x.done?"Tandai Selesai":"Belum Selesai"):"")+
+  `<div class="err" id="err"></div><button class="btn" style="margin-top:0" onclick="saveTask(${id})">${id?"Simpan Perubahan":"Simpan Tugas"}</button>`+(id?`<button class="ghost" onclick="del('task',${id})">Hapus Tugas Ini</button>`:"")}
+ if(t==="sched"){const x=S.sched.find(y=>y.id===id)||{kat:"",j:"",d:S.sel,a:"",b:"",l:"",note:""};
+  return head(id?"Edit Jadwal":"Tambah Jadwal")+f("Kategori Kegiatan","f1",x.kat,"Misal: Kuliah Teori")+f("Nama Kegiatan","f2",x.j,"Misal: Kuliah Sistem Basis Data")+f("Tanggal Pelaksanaan","f3",x.d,"","date")+
+  `<div class="two">${f("Jam Mulai","f4",x.a,"","time")}${f("Jam Selesai","f5",x.b,"","time")}</div>`+f("Lokasi / Ruang Kuliah","f6",x.l,"Misal: Ruang 204 • Gedung B")+
+  `<div class="fld"><div class="lab">Catatan Pendukung</div><textarea id="f7" rows="2" placeholder="Misal: Bawa modul materi bab 4 &amp; laptop">${esc(x.note||"")}</textarea></div><div class="err" id="err"></div><button class="btn" style="margin-top:0" onclick="saveSched(${id})">${id?"Simpan Perubahan":"Simpan Jadwal Kegiatan"}</button>`+(id?`<button class="ghost" onclick="del('sched',${id})">Hapus Jadwal Ini</button>`:"")}
+ const p=S.prof;return head("Edit Profil")+`<div style="text-align:center;margin:8px 0"><div class="av" style="width:72px;height:72px;margin:auto;font-size:24px">${ini()}</div><div class="sub" style="font-size:12px">Data profil lokal mahasiswa</div></div>`+f("Nama Lengkap","f1",p.nama,"Misal: Vicky Andika")+f("Nomor Induk Mahasiswa (NIM)","f2",p.nim,"Misal: 2407044")+f("Program Studi","f3",p.prodi,"Misal: Sistem Informasi")+sel("Semester Aktif","f4",["","1","2","3","4","5","6","7","8"],p.sem)+f("Fakultas &amp; Universitas / Institut","f5",p.fak,"Misal: Fakultas Ilmu Komputer ITG")+`<div class="err" id="err"></div><button class="btn" style="margin-top:0" onclick="saveProf()">Simpan Perubahan Profil</button>`}
+
+function clearDone(){sheet(`<h2>Hapus semua tugas selesai?</h2><div class="sub" style="margin:6px 0 16px">Hanya tugas di tab Selesai yang dihapus. Tugas yang belum selesai tetap aman.</div><div class="two"><button class="btn sec" style="margin:0" onclick="closeSheet()">Batal</button><button class="btn red" style="margin:0" onclick="S.tasks=S.tasks.filter(x=>!x.done);closeSheet();toast('Tugas selesai dihapus');render()">Hapus Semua</button></div>`)}
+function undo(id){sheet(`<h2>Tugas ini belum selesai?</h2><div class="sub" style="margin:6px 0 16px">Pilih Ya untuk mengembalikan tugas ke daftar Mendatang. Pilih Tidak agar tetap di Selesai.</div><div class="two"><button class="btn sec" style="margin:0" onclick="closeSheet()">Tidak</button><button class="btn" style="margin:0" onclick="S.tasks.find(x=>x.id===${id}).done=false;closeSheet();toast('Tugas dikembalikan ke Mendatang');render()">Ya</button></div>`)}
+function toggle(id){const t=S.tasks.find(x=>x.id===id);t.done=!t.done;toast(t.done?"Tugas selesai, dipindah ke tab Selesai":"Tugas dikembalikan ke Mendatang");render()}
+function saveTask(id){const o={mk:gv("f1"),j:gv("f2"),tipe:gs("f3"),d:$("f4").value,w:$("f5").value,note:gv("f6")};
+ if(!o.mk||!o.j||!o.d||!o.w){$("err").textContent="Mata kuliah, nama tugas, tanggal, dan waktu wajib diisi.";return}
+ if(id){const t=S.tasks.find(x=>x.id===id);Object.assign(t,o,{done:gs("f7")==="Tandai Selesai"})}else S.tasks.push({id:S.nid++,done:false,...o});
+ S.view=null;toast(id?"Perubahan tugas disimpan":"Tugas berhasil disimpan");render()}
+function saveSched(id){const o={kat:gv("f1"),j:gv("f2"),d:$("f3").value,a:$("f4").value,b:$("f5").value,l:gv("f6"),note:gv("f7")};
+ if(!o.kat||!o.j||!o.d||!o.a||!o.b){$("err").textContent="Kategori, nama kegiatan, tanggal, dan jam wajib diisi.";return}
+ if(mins(o.b)<=mins(o.a)){$("err").textContent="Jam selesai harus setelah jam mulai.";return}
+ let w="";if(S.set.rest&&!/istirahat/i.test(o.kat))S.sched.forEach(s=>{if(s.id!==id&&s.d===o.d&&!/istirahat/i.test(s.kat)){const g=mins(o.a)>=mins(s.b)?mins(o.a)-mins(s.b):mins(s.a)>=mins(o.b)?mins(s.a)-mins(o.b):-1;if(g>=0&&g<S.set.gap)w=" Jeda dengan kegiatan lain kurang dari "+S.set.gap+" menit."}});
+ if(id)Object.assign(S.sched.find(x=>x.id===id),o);else S.sched.push({id:S.nid++,...o});
+ S.sel=o.d;S.view=null;toast((id?"Perubahan jadwal disimpan.":"Jadwal berhasil disimpan.")+w);render()}
+function saveProf(){S.prof={nama:gv("f1"),nim:gv("f2"),prodi:gv("f3"),sem:$("f4").value,fak:gv("f5")};S.view=null;toast("Profil disimpan");render()}
+function del(k,id){sheet(`<h2>${k==="task"?"Hapus tugas ini?":"Hapus jadwal ini?"}</h2><div class="sub" style="margin:6px 0 16px">Data yang dihapus tidak dapat dikembalikan.</div><div class="two"><button class="btn sec" style="margin:0" onclick="closeSheet()">Batal</button><button class="btn red" style="margin:0" onclick="doDel('${k}',${id})">Hapus</button></div>`)}
+function doDel(k,id){if(k==="task")S.tasks=S.tasks.filter(x=>x.id!==id);else S.sched=S.sched.filter(x=>x.id!==id);closeSheet();S.view=null;toast("Berhasil dihapus");render()}
+
+function render(){const on=S.ob;$("nav").style.display=on?"flex":"none";
+ $("nav").innerHTML=[["home","Home"],["jadwal","Jadwal"],["tugas","Tugas"],["profil","Profil"]].map(([k,l])=>`<button class="${S.tab===k?"on":""}" onclick="go('${k}')"><svg viewBox="0 0 24 24">${I[k]}</svg>${l}</button>`).join("");
+ $("screen").innerHTML=!on?vOb():S.view?vForm():({home:vHome,jadwal:vJadwal,tugas:vTugas,profil:vProfil})[S.tab]();save()}
+render();
+</script>
+</body>
+</html>
